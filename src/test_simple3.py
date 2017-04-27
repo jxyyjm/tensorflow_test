@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+# @time      : 2017-02-16
+# @author    : yujianmin
+# @reference : find latter
+# @what to-do: build a cnn
+from __future__ import print_function
 import tensorflow as tf
 
 
@@ -69,10 +74,11 @@ sess.run(tf.initialize_all_variables())
 
 for i in range(1000):
 	batch = mnist.train.next_batch(50)
-	if i%100 == 0:
-		train_accuracy = accuracy.eval(feed_dict={x:batch[0], y_: batch[1], keep_prob: 1.0})
-		print "step %d, training accuracy %g"%(i, train_accuracy)
 	train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+	if i%100 == 0:
+		train_accuracy = accuracy.eval(feed_dict={x:batch[0], y_:batch[1], keep_prob:1.0})
+		test_accuracy  = accuracy.eval(feed_dict={x:mnist.test.images, y_:mnist.test.labels, keep_prob:1.0})
+		print (i, 'training accuracy', train_accuracy)
 
-print "test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
+print ('last test accuracy', accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
 
