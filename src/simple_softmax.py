@@ -86,6 +86,7 @@ class CSimple_test:
 		f_fun = tf.nn.softmax(tf.matmul(x, w) + b) ## [m, 10]
 		## loss-function   ## cross_entropy ##
 		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)))
+		#loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)) - 0.01*tf.reduce_sum(b))
 		## cross_entropy = -1/n sum_x [y*lnf(x) + (1-y)*lnf(x)] ##
 		## optimizer       ##
 		'''
@@ -129,7 +130,9 @@ class CSimple_test:
 		w = tf.Variable(tf.zeros([n_feature, n_digits]))
 		b = tf.Variable(tf.zeros([n_digits]))
 		f_fun = tf.nn.softmax(tf.matmul(x, w) + b) ## [m, 10]
-		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)))
+		#loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)))
+		## if regularity is added ##
+		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)) - 0.01*tf.reduce_sum(b))
 		lr   = 0.005
 		step = tf.train.GradientDescentOptimizer(lr).minimize(loss)
 		equal_bool = tf.equal(tf.argmax(y, 1), tf.argmax(f_fun, 1))
@@ -155,7 +158,7 @@ if __name__=='__main__':
 	## read the data ##
 	CTest.read_data_split()
 	## train a softmax multi-classes model
-	print ('train using all-data')
+	print ('train using all-data')	
 	CTest.softmax_tf()
 	print ('train using batch-data')
 	#CTest.softmax_epoch_tf()
