@@ -99,7 +99,7 @@ class CSimple_test:
 			@@RMSPropOptimizer
 		'''
 		## build a gradient descent optimizer here ##
-		lr   = 0.000001
+		lr   = 0.0000051
 		step = tf.train.GradientDescentOptimizer(lr).minimize(loss)
 		## tf.train.GradientDescentOptimizer return==> a optimizer
 		## optimizer.minize(loss) equal ==> compute_gradients() then, apply_gradient
@@ -130,14 +130,14 @@ class CSimple_test:
 		b = tf.Variable(tf.zeros([n_digits]))
 		f_fun = tf.nn.softmax(tf.matmul(x, w) + b) ## [m, 10]
 		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)))
-		lr   = 0.001
+		lr   = 0.005
 		step = tf.train.GradientDescentOptimizer(lr).minimize(loss)
 		equal_bool = tf.equal(tf.argmax(y, 1), tf.argmax(f_fun, 1))
 		accuracy   = tf.reduce_mean(tf.cast(equal_bool, tf.float32))
 		init = tf.initialize_all_variables()
 		sess = tf.Session()
 		sess.run(init)
-		for i in range(300):
+		for i in range(600):
 				batch_x, batch_y = self.data.train.next_batch(100)
 				sess.run(step, feed_dict={x: batch_x, y: batch_y})
 				if i%10 == 0:
@@ -158,6 +158,7 @@ if __name__=='__main__':
 	print ('train using all-data')
 	CTest.softmax_tf()
 	print ('train using batch-data')
-	CTest.softmax_epoch_tf()
-	print ('if using all-data, learning-rate 0.000001, if batch-data, lr 0.001')
-
+	#CTest.softmax_epoch_tf()
+	print ('if using all-data, learning-rate 0.000001, if mini-batch-data, lr 0.001')
+	print ('mini-batch, conv untill 0.92 around, if could it be more higher ?')
+	print ('sklearn softmax 0.92 around')
