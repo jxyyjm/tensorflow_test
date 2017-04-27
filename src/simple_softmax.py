@@ -139,8 +139,6 @@ class CSimple_test:
 		sess.run(init)
 		for i in range(300):
 				batch_x, batch_y = self.data.train.next_batch(100)
-				#print ('batch_x :', batch_x.shape)
-				#print ('batch_y :', batch_y.shape)
 				sess.run(step, feed_dict={x: batch_x, y: batch_y})
 				if i%10 == 0:
 					print ('train accuracy : ', \
