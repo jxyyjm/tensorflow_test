@@ -3,7 +3,7 @@
 ## @time       : 2017-04-26
 ## @author     : yujianmin
 ## @reference  : code,       , https://www.tensorflow.org/get_started/mnist/beginners
-##			   : cross-entroy, https://hit-scir.gitbooks.io/neural-networks-and-deep-learning-zh_cn/content/chap3/c3s1.html
+##             : cross-entroy, https://hit-scir.gitbooks.io/neural-networks-and-deep-learning-zh_cn/content/chap3/c3s1.html
 ## @what-to-do : try using tensorflow to make a multi-class predict model
 
 from __future__ import division
@@ -157,6 +157,9 @@ if __name__=='__main__':
 	## read the data ##
 	CTest.read_data_split()
 	## train a softmax multi-classes model
+	print ('train using all-data')
 	CTest.softmax_tf()
-	#CTest.softmax_epoch_tf()
+	print ('train using batch-data')
+	CTest.softmax_epoch_tf()
+	print ('if using all-data, learning-rate 0.000001, if batch-data, lr 0.001')
 
