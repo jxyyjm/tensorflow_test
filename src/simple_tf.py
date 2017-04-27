@@ -1,36 +1,49 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-
 # @time      : 2017-04-27
 # @author    : yujianmin
-# @reference : 
-# @what to-do: try a simple tensorflow model
+# @reference :
+# @what to-do: use minist data to fit tf model
 
+# tensorFlow 让我们描述一个交互操作图，然后完全将其运行在Python外部 #
 import tensorflow as tf
-import numpy as np
+from tensorflow.examples.tutorials.mnist import input_data
+mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 
-## data      ##
-x_data = np.float32(np.random.rand(2, 100))
-y_data = np.dot([0.100, 0.200], x_data) + 0.300
+x = tf.placeholder(tf.float32, [None, 784])
+# 构造一个占位符矩阵, 大小[n, 784] ## 前面的n可以为任意大小 ##
+# Inserts a placeholder for a tensor that will be always fed.
+# **Important**: This tensor will produce an error if evaluated. 
+# Its value must be fed using the `feed_dict` optional argument to `Session.run()`,    `Tensor.eval()`, or `Operation.run()`.
 
-## parameter ##
-b = tf.Variable(tf.zeros([1]))
-W = tf.Variable(tf.random_uniform([1, 2], -1.0, 1.0))
-y = tf.matmul(W, x_data) + b
+W = tf.Variable(tf.zeros([784, 10]))
+b = tf.Variable(tf.zeros([10]))
+# 构造两个功能等同于张量的variable, 在图中可被修改，在计算中可被修改 ##
 
-## 目标与优化 ##
-loss = tf.reduce_mean(tf.square(y-y_data))
-optimizer = tf.train.GradientDescentOptimizer(0.5)
-train = optimizer.minimize(loss)
+## 构造目标模型 ##
+y = tf.nn.softmax(tf.matmul(x, W) + b)
 
+## 构造代价函数 ##
+y_ = tf.placeholder('float', [None, 10])
+cross_entropy = -tf.reduce_sum(y_ * tf.log(y))  ## ? 这里是什么意思？交叉熵 ##
+#cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
+
+## 优化方法设定 ##
+train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
+
+## 初始化 ##
+#init = tf.global_variables_initializer() 这个地方好像是有问题的 ##
 init = tf.initialize_all_variables()
-
-## start ##
-sess = tf.Session()
+sess = tf.Session() ## 构造一个对话 ##
 sess.run(init)
 
-## 拟合 ##
-for step in xrange(0, 201):
-	sess.run(train)
-	if step % 20 == 0:
-		print step, sess.run(W), sess.run(b)
+## 训练 ##
+for i in range(1000):
+	batch_xs, batch_ys = mnist.train.next_batch(100)
+	sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+	if i%20 == 0:
+		## 评估 ##
+		correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_, 1))
+		accuracy = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
+		print i, 'iter', sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels})
+		#print accuracy.eval(session=sess, feed_dict={x: mnist.test.images, y_: mnist.test.labels})
