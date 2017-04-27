@@ -6,7 +6,7 @@
 ## 2) file: 在程序开始，设置输入pipeline read from file ##
 ## 3) preload: 定义常量或变量，存储所有数据 ##
 
-## 如何share variable ##
+from __future__ import print_function
 import tensorflow as tf
 
 def weight_variable(shape):
@@ -70,38 +70,19 @@ sess = tf.InteractiveSession()
 # a=tf.constant(5.0); b=tf.constant(6,0); c=a*b
 # sess = tf.Session(); sess.run(c); sess.close()
 # sess = tf.InteractiveSession(); c.eval(); sess.run(c); sess.close(0
-sess.run(tf.initialize_all_variables())
-
+#sess.run(tf.initialize_all_variables())
+sess.run(tf.global_variables_initializer())
 for i in range(1000):
 	batch = mnist.train.next_batch(50)
+	train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 	if i%100 == 0:
 		train_accuracy = accuracy.eval(feed_dict={x:batch[0], y_: batch[1], keep_prob: 1.0})
-		print "step %d, training accuracy %g"%(i, train_accuracy)
-	train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+		test_accuracy  = accuracy.eval(feed_dict={x:mnist.test.images, y_:mnist.test.labels, keep_prob:1.0})
+		print (i, 'training accuracy :', train_accuracy, 'test accuracy :', test_accuracy)
 
-print "test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
+print ('test accuracy :', accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
 
 ##############################################################################
-##   上面的方法中，我们可以看到有四个不同的变量，W_conv1, b_conv1, W_conv2, b_conv2. ##
-
-## 怎么共享变量呢？？##
-## 变量作用域 ##
-## 1.  tg.get_variable(name, shape, initializer) ## 通过所给的名字创建或是返回一个变量
-## 2.  tf.variable_scope(scope_name) ## 为变量 指定命名空间 ##
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
