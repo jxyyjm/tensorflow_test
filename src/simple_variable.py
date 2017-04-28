@@ -35,18 +35,18 @@
 ##		init_tensor = tf.random_uniform([10, 5], minval=0, maxval=10, dtype=tf.float32)
 ##		weight      = tf.Variable(init_tensor)
 ##		sess        = tf.Session()
-##		init        = tf.initialize_all_variables()
+##		init        = tf.global_variables_initializer()
 ##		sess.run(init); sess.run(weight); sess.run(init_tensor); sess.close()
 ## 1.3) initialize a variable with another variable
 ##		用一个变量去初始化另一个变量，必须使得自己 初始化完成Variable.initialized_value
 ##		weight      = tf.Variable(tf.zeros([2,3], dtype=tf.float32)
 ##		weight2     = tf.Variable(weight.initialized_value()) ## 和下面的函数不一样 ##
-##		init        = tf.initialize_all_variables() ##tf.global_variables_initializer()#
+##		init        = tf.global_variables_initializer() ##tf.global_variables_initializer()#
 ##		sess = tf.Session(); sess.run(init); sess.run(weight2); sess.run(weight)
 ## 1.4) save && restore variables 
 ##		variable1   = tf.Variable(tf.zeros([2,2], dtype=tf.int32), name='variable1')
 ##		variable2   = tf.Variable(tf.ones_like(variable1.initialized_value()), name='variable2')
-##		init        = tf.initialize_all_variables()
+##		init        = tf.global_variables_initializer()
 ##		sess        = tf.Session()
 ##		sess.run(init); sess.run(variable1); sess.run(variable2)
 ##		saver       = tf.train.Saver()
@@ -86,7 +86,7 @@ with tf.variable_scope('foo', reuse=True): ## 如果这里False，重复命名�
 	v1 = tf.get_variable('v', [1])
 assert v1 == v
 sess = tf.Session()
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess.run(init)
 print ( 'v  is    : ', sess.run(v),  v.name)
 print ( 'v1 is    : ', sess.run(v1), v.name )
@@ -100,7 +100,7 @@ with tf.variable_scope('foo') as scope_now:
 	v1 = tf.get_variable('v', [1]) 
 	## 如果shape不一致，是error ## 之前不存在的变量的共享，也是error ##
 	sess = tf.Session()
-	init = tf.initialize_all_variables()
+	init = tf.global_variables_initializer()
 	sess.run(init)
 	print ( 'v  is    : ', sess.run(v),  v.name)
 	print ( 'v1 is    : ', sess.run(v1), v.name )
@@ -132,7 +132,7 @@ with tf.variable_scope('foo', initializer = tf.constant_initializer(0.4)):
 	w = tf.get_variable('w', [1], initializer=tf.constant_initializer(0.3)) ## 单独修改 #
 	k = tf.get_variable('k', [1])
 	sess = tf.Session()
-	init = tf.initialize_all_variables()
+	init = tf.global_variables_initializer()
 	sess.run(init)
 	current_scope = tf.get_variable_scope()
 	print ('v is : ', sess.run(v), ';\nscope name is : ' ,current_scope.name, ' ;\nscope here is : ', current_scope)

@@ -24,7 +24,8 @@ import tensorflow as tf
 
 x = tf.Variable(tf.random_normal([1,10], mean=0.0, stddev=1.0))
 sess = tf.Session()
-init = tf.initialize_all_variables()
+#init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess.run(init)
 print ('x          : ', sess.run(x))
 y = tf.nn.relu(x)

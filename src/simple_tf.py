@@ -32,8 +32,8 @@ cross_entropy = -tf.reduce_sum(y_ * tf.log(y))  ## ? 这里是什么意思？交
 train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
 
 ## 初始化 ##
-#init = tf.global_variables_initializer() 这个地方好像是有问题的 ##
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer() #这个地方好像是有问题的，与版本相关 ##
+#init = tf.initialize_all_variables()
 sess = tf.Session() ## 构造一个对话 ##
 sess.run(init)
 
@@ -45,5 +45,5 @@ for i in range(1000):
 		## 评估 ##
 		correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_, 1))
 		accuracy = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
-		print i, 'iter', sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels})
+		print i, 'iter','accuracy', sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels})
 		#print accuracy.eval(session=sess, feed_dict={x: mnist.test.images, y_: mnist.test.labels})

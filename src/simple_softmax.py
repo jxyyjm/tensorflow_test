@@ -108,7 +108,8 @@ class CSimple_test:
 		equal_bool = tf.equal(tf.argmax(y, 1), tf.argmax(f_fun, 1))
 		accuracy   = tf.reduce_mean(tf.cast(equal_bool, tf.float32))
 		## initilize       ##
-		init = tf.initialize_all_variables()
+		#init = tf.initialize_all_variables()
+		init = tf.global_variables_initializer()
 		sess = tf.Session()
 		#sess = tf_debug.LocalCLIDebugWrapperSession()
 		sess.run(init)
@@ -137,7 +138,8 @@ class CSimple_test:
 		step = tf.train.GradientDescentOptimizer(lr).minimize(loss)
 		equal_bool = tf.equal(tf.argmax(y, 1), tf.argmax(f_fun, 1))
 		accuracy   = tf.reduce_mean(tf.cast(equal_bool, tf.float32))
-		init = tf.initialize_all_variables()
+		#init = tf.initialize_all_variables()
+		init = tf.global_variables_initializer()
 		sess = tf.Session()
 		sess.run(init)
 		for i in range(600):
