@@ -78,7 +78,8 @@ class CSimple_test:
 				==> softmax[i, j] = exp(logits[i, j]) / sum_j(exp(logits[i, j]))
 				==> softmax[i, j] = exp(j)/sum_j(exp([i,j]))
 			@@log_softmax
-			@@sigmoid_cross_entropy_with_logits
+			@@sigmoid_cross_entropy_with_logits(logits=X, labels=Y)
+                ==> -Y*log[sigmod(X)] - (1-Y)*log[1-sigmod(X)] ## is also used as loss-function
 			@@softmax_cross_entropy_with_logits
 			@@sparse_softmax_cross_entropy_with_logits
 			@@weighted_cross_entropy_with_logits
