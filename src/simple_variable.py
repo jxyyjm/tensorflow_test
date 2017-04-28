@@ -7,7 +7,7 @@
 # @what to-do: get some-knowledge of variable in tensorflow
 
 ## varibale create / initilize / save / reload ##
-## 变量存在于内存中，其中保存着张量 ##
+## 变量存在于内存中，其中保存着张量 ## 
 ## tf.Variable class && tf.train.Saver class
 ## 1)  creat variable ##
 ## 向类传递 张量 以创建变量 ##
@@ -172,4 +172,33 @@ with tf.variable_scope("foo") as scope_cur:
 	print ('v.op.name', v.op.name)
 
 
+print ('\n single initilize variable vs global_variables_initializer')
+print ('here tf.global_variables_initializer')
+tf.reset_default_graph()
+x = tf.random_uniform([10, 5], minval=0, maxval=10, dtype=tf.float32)
+y = tf.random_uniform([10, 5], minval=0, maxval=10, dtype=tf.float32)
+v1= tf.Variable(x)
+v2= tf.Variable(y)
+sess = tf.Session()
+init = tf.global_variables_initializer()
+sess.run(init)
+print ('v1.init by tf.global_variables_initializer')
+print (sess.run(v1))
+
+print ('\n here tf.variables_initializer')
+tf.reset_default_graph()
+x = tf.random_uniform([10, 5], minval=0, maxval=10, dtype=tf.float32)
+y = tf.random_uniform([10, 5], minval=0, maxval=10, dtype=tf.float32)
+v1= tf.Variable(x)
+v2= tf.Variable(y)
+v3= tf.Variable(x)
+sess = tf.Session()
+sess.run(tf.variables_initializer(var_list=[v1, v2]))
+print ('v1.init by tf.variables_initializer(var_list=[v1, v2])')
+print (sess.run(v1))
+print ('v2.init by tf.variables_initializer(var_list=[v1, v2])')
+print (sess.run(v2))
+sess.run(tf.variables_initializer([v3]))
+print ('v3.init by tf.variables_initializer')
+print (sess.run(v3))
 
