@@ -61,6 +61,24 @@ class CSimple_test:
 		self.test_y  = test_y
 		self.data    = mnist
 
+	def read_data_split_one(self):
+		# made the input as 0/1 value #
+		mnist   = input_data.read_data_sets('MNIST_data/', one_hot=True)
+		train_x = mnist.train.images
+		one_pos = np.where(train_x>0)
+		train_x[one_pos] = 1
+		train_y = mnist.train.labels
+		
+		test_x  = mnist.test.images
+		one_pos = np.where(test_x>0)
+		test_x[one_pos] = 1
+		test_y  = mnist.test.labels
+		self.train_x = train_x
+		self.train_y = train_y
+		self.test_x  = test_x
+		self.test_y  = test_y
+		self.data    = mnist
+
 	def softmax_tf(self):
 		## it could seen combine 10-small-models into One-big-model and optimal all-para sync ##
 		## input.placeholder ##
@@ -86,7 +104,7 @@ class CSimple_test:
 		'''
 		f_fun = tf.nn.softmax(tf.matmul(x, w) + b) ## [m, 10]
 		## loss-function   ## cross_entropy ##
-		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)))
+		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun))) ## here maybe not cross-entropy
 		#loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)) - 0.01*tf.reduce_sum(b))
 		## cross_entropy = -1/n sum_x [y*lnf(x) + (1-y)*lnf(x)] ##
 		## optimizer       ##
@@ -158,13 +176,18 @@ class CSimple_test:
 	
 if __name__=='__main__':
 	CTest = CSimple_test()
+	'''
 	## read the data ##
 	CTest.read_data_split()
-	## train a softmax multi-classes model
+	# train a softmax multi-classes model
 	print ('train using all-data')	
 	CTest.softmax_tf()
 	print ('train using batch-data')
-	#CTest.softmax_epoch_tf()
+	CTest.softmax_epoch_tf()
 	print ('if using all-data, learning-rate 0.000001, if mini-batch-data, lr 0.001')
 	print ('mini-batch, conv untill 0.92 around, if could it be more higher ?')
 	print ('sklearn softmax 0.92 around')
+	'''
+	prnit ('input value set 0/1 format')
+	CTest.read_data_split_one()
+	CTest.softmax_tf()
