@@ -104,7 +104,8 @@ class CSimple_test:
 		'''
 		f_fun = tf.nn.softmax(tf.matmul(x, w) + b) ## [m, 10]
 		## loss-function   ## cross_entropy ##
-		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun))) ## here maybe not cross-entropy
+		#loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun))) ## here is not right, tf.reduce_sum need specify dim ##
+		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun), 1))
 		#loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)) - 0.01*tf.reduce_sum(b))
 		## cross_entropy = -1/n sum_x [y*lnf(x) + (1-y)*lnf(x)] ##
 		## optimizer       ##
@@ -119,7 +120,7 @@ class CSimple_test:
 			@@RMSPropOptimizer
 		'''
 		## build a gradient descent optimizer here ##
-		lr   = 0.0000051
+		lr   = 0.005
 		step = tf.train.GradientDescentOptimizer(lr).minimize(loss)
 		## tf.train.GradientDescentOptimizer return==> a optimizer
 		## optimizer.minize(loss) equal ==> compute_gradients() then, apply_gradient
@@ -150,18 +151,20 @@ class CSimple_test:
 		w = tf.Variable(tf.zeros([n_feature, n_digits]))
 		b = tf.Variable(tf.zeros([n_digits]))
 		f_fun = tf.nn.softmax(tf.matmul(x, w) + b) ## [m, 10]
-		#loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)))
+		#loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun))) # here is also wrong #
+		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun), 1)) #+ 0.1 * tf.reduce_sum(w*w)
 		## if regularity is added ##
-		loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)) - 0.01*tf.reduce_sum(b))
-		lr   = 0.005
-		step = tf.train.GradientDescentOptimizer(lr).minimize(loss)
+		#loss  = tf.reduce_mean(-tf.reduce_sum(y * tf.log(f_fun)) - 0.01*tf.reduce_sum(b))
+		lr   = 0.008
+		#step = tf.train.GradientDescentOptimizer(lr).minimize(loss)
+		step = tf.train.AdamOptimizer(lr).minimize(loss)
 		equal_bool = tf.equal(tf.argmax(y, 1), tf.argmax(f_fun, 1))
 		accuracy   = tf.reduce_mean(tf.cast(equal_bool, tf.float32))
 		#init = tf.initialize_all_variables()
 		init = tf.global_variables_initializer()
 		sess = tf.Session()
 		sess.run(init)
-		for i in range(600):
+		for i in range(2500):
 				batch_x, batch_y = self.data.train.next_batch(100)
 				sess.run(step, feed_dict={x: batch_x, y: batch_y})
 				if i%10 == 0:
@@ -176,12 +179,12 @@ class CSimple_test:
 	
 if __name__=='__main__':
 	CTest = CSimple_test()
-	'''
+	
 	## read the data ##
 	CTest.read_data_split()
 	# train a softmax multi-classes model
 	print ('train using all-data')	
-	CTest.softmax_tf()
+	#CTest.softmax_tf()
 	print ('train using batch-data')
 	CTest.softmax_epoch_tf()
 	print ('if using all-data, learning-rate 0.000001, if mini-batch-data, lr 0.001')
@@ -191,3 +194,4 @@ if __name__=='__main__':
 	prnit ('input value set 0/1 format')
 	CTest.read_data_split_one()
 	CTest.softmax_tf()
+	'''
