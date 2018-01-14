@@ -72,7 +72,7 @@ sess = tf.InteractiveSession()
 # sess = tf.InteractiveSession(); c.eval(); sess.run(c); sess.close(0
 #sess.run(tf.initialize_all_variables())
 sess.run(tf.global_variables_initializer())
-for i in range(1000):
+for i in range(10000):
 	batch = mnist.train.next_batch(50)
 	train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 	if i%100 == 0:

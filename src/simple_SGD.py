@@ -88,9 +88,11 @@ class CSimple_test:
 			cur_sample = train_x[i]
 			cur_label  = train_y[i]
 			for i in range(len(theta)):
-				pred_cur= self.sigmoid(-np.dot(cur_sample, theta))
+				prod_   = np.dot(cur_sample, theta)
+				pred_cur= self.sigmoid(-prod_)
 				for i in range(len(grad)):
-					grad[i] = (pred_cur - cur_label)*cur_sample[i]
+					grad[i] = (pred_cur - cur_label)*cur_sample[i] # here and next line is same #
+					#grad[i] = -cur_label*cur_sample[i]*self.sigmoid(prod_) + (1-cur_label)*cur_sample[i]*self.sigmoid(-prod_)
 					theta[i]= theta[i] - lr*grad[i]
 			# train accuracy #
 			pred_train  = np.dot(train_x, theta)
