@@ -8,7 +8,7 @@ import faiss
 import numpy as np
 import pandas as pd
 import redis
-r = redis.Redis(host='42.236.9.82', port=5190, db=0, password='7bb89a842dc3383c')
+r = redis.Redis(host='2', port=, db=, password='')
 
 def load_key2emb(file_name):
   global d
